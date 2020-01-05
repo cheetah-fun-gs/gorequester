@@ -12,6 +12,8 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"time"
 
 	requester "github.com/cheetah-fun-gs/gorequester"
 )
@@ -80,5 +82,10 @@ func main() {
 		fmt.Println(r)
 	}
 
+	// Custom Client
+	c := &http.Client{
+		Timeout: time.Second * 5,
+	}
+	fmt.Println(requester.NewWithClient("GET", "http://httpbin.org/get?abc=123", c).ReadString())
 }
 ```

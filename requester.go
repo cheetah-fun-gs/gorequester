@@ -13,63 +13,10 @@ import (
 	urlplus "github.com/cheetah-fun-gs/goplus/net/url"
 )
 
-// Client Client
-type Client struct {
-	Transport     http.RoundTripper
-	CheckRedirect func(req *http.Request, via []*http.Request) error
-	Jar           http.CookieJar
-	Timeout       time.Duration
-}
-
-func (client *Client) httpClient() *http.Client {
+func defaultClient() *http.Client {
 	return &http.Client{
-		Transport:     client.Transport,
-		CheckRedirect: client.CheckRedirect,
-		Jar:           client.Jar,
-		Timeout:       client.Timeout,
+		Timeout: time.Second * 5,
 	}
-}
-
-// New 创建一个基础 Requester
-func (client *Client) New(method, toURL string) *Requester {
-	u, err := url.Parse(toURL)
-	if err != nil {
-		return &Requester{
-			Error: err,
-		}
-	}
-	return &Requester{
-		client:     client.httpClient(),
-		url:        u,
-		method:     method,
-		rawData:    []byte{},
-		formFields: map[string][]string{},
-		formFiles:  []*FormFile{},
-	}
-}
-
-// Post 创建一个 POST Requester
-func (client *Client) Post(toURL string) *Requester {
-	return client.New("POST", toURL)
-}
-
-// PostData PostData
-func (client *Client) PostData(toURL, contentType string, v interface{}) *Requester {
-	req := client.New("POST", toURL).SetRawData(v)
-	req.contentType = contentType
-	return req
-}
-
-// PostJSON PostJSON
-func (client *Client) PostJSON(toURL string, v interface{}) *Requester {
-	req := client.New("POST", toURL).SetRawData(v)
-	req.contentType = "application/json"
-	return req
-}
-
-// Get 创建一个 GET Requester
-func (client *Client) Get(toURL string) *Requester {
-	return client.New("GET", toURL)
 }
 
 // Requester http.Request
@@ -81,8 +28,68 @@ type Requester struct {
 	method      string
 	contentType string
 	rawData     []byte
-	formFields  map[string][]string
+	formFields  url.Values
 	formFiles   []*FormFile
+}
+
+// New 创建一个基础 Requester
+func New(method, toURL string) *Requester {
+	u, err := url.Parse(toURL)
+	if err != nil {
+		return &Requester{
+			Error: err,
+		}
+	}
+	return &Requester{
+		client:     defaultClient(),
+		url:        u,
+		method:     method,
+		rawData:    []byte{},
+		formFields: map[string][]string{},
+		formFiles:  []*FormFile{},
+	}
+}
+
+// NewWithClient 创建一个基础 Requester
+func NewWithClient(method, toURL string, client *http.Client) *Requester {
+	u, err := url.Parse(toURL)
+	if err != nil {
+		return &Requester{
+			Error: err,
+		}
+	}
+	return &Requester{
+		client:     client,
+		url:        u,
+		method:     method,
+		rawData:    []byte{},
+		formFields: map[string][]string{},
+		formFiles:  []*FormFile{},
+	}
+}
+
+// Post 创建一个 POST Requester
+func Post(toURL string) *Requester {
+	return New("POST", toURL)
+}
+
+// PostData PostData
+func PostData(toURL, contentType string, v interface{}) *Requester {
+	req := New("POST", toURL).SetRawData(v)
+	req.contentType = contentType
+	return req
+}
+
+// PostJSON PostJSON
+func PostJSON(toURL string, v interface{}) *Requester {
+	req := New("POST", toURL).SetRawData(v)
+	req.contentType = "application/json"
+	return req
+}
+
+// Get 创建一个 GET Requester
+func Get(toURL string) *Requester {
+	return New("GET", toURL)
 }
 
 // Client Client
@@ -100,7 +107,7 @@ func (req *Requester) Request() *http.Request {
 	return req.request
 }
 
-// v string, map[string]string{}, struct
+// v type in ( string, struct, map[string]string, map[string][]string,  map[string]int, map[string][]int )
 func stringRawQuery(v ...interface{}) (string, error) {
 	splits := []string{}
 	for _, vv := range v {
@@ -150,7 +157,7 @@ func (req *Requester) SetRawQuery(v ...interface{}) *Requester {
 	return req
 }
 
-// v string, []byte, map[string]string{}, struct
+// v type in ( string, []byte, struct, any json )
 func byteRawData(v interface{}) ([]byte, error) {
 	switch v.(type) {
 	case string:
@@ -180,44 +187,13 @@ func (req *Requester) SetRawData(v interface{}) *Requester {
 	return req
 }
 
-func toFormFields(v interface{}) (map[string][]string, error) {
-	m := map[string]interface{}{}
-	switch v.(type) {
-	case map[string]interface{}:
-		m = v.(map[string]interface{})
-	default:
-		// struct to map
-		data, err := json.Marshal(v)
-		if err != nil {
-			return nil, err
-		}
-		err = json.Unmarshal(data, &m)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	mm := map[string][]string{}
-	for key, val := range m {
-		mm[key] = []string{}
-		switch val.(type) {
-		case []interface{}:
-			for _, vv := range val.([]interface{}) {
-				mm[key] = append(mm[key], fmt.Sprintf("%v", vv))
-			}
-		default:
-			mm[key] = append(mm[key], fmt.Sprintf("%v", val))
-		}
-	}
-	return mm, nil
-}
-
 // SetFormFields 设置 formField
+// v type in ( string, struct, map[string]string, map[string][]string,  map[string]int, map[string][]int )
 func (req *Requester) SetFormFields(v interface{}) *Requester {
 	if req.Error != nil {
 		return req
 	}
-	m, err := toFormFields(v)
+	m, err := urlplus.ToValues(v)
 	if err != nil {
 		req.Error = err
 		return req
