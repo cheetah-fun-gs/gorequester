@@ -1,3 +1,13 @@
+# gorequester
+Golang chain style http request lib
+
+# Install
+```bash
+go get github.com/cheetah-fun-gs/gorequester
+```
+
+# How
+```golang
 package main
 
 import (
@@ -83,3 +93,4 @@ func main() {
 	}
 	fmt.Println(requester.NewWithClient("GET", "http://httpbin.org/get?abc=123", c).ReadString())
 }
+```
