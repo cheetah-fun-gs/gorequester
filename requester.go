@@ -68,6 +68,11 @@ func NewWithClient(method, toURL string, client *http.Client) *Requester {
 	}
 }
 
+// Get 创建一个 GET Requester
+func Get(toURL string, v ...interface{}) *Requester {
+	return New("GET", toURL).AddRawQuery(v...)
+}
+
 // Post 创建一个 POST Requester
 func Post(toURL string) *Requester {
 	return New("POST", toURL)
@@ -87,9 +92,9 @@ func PostJSON(toURL string, v interface{}) *Requester {
 	return req
 }
 
-// Get 创建一个 GET Requester
-func Get(toURL string) *Requester {
-	return New("GET", toURL)
+// PostForm PostForm
+func PostForm(toURL string, v interface{}) *Requester {
+	return New("POST", toURL).SetFormFields(v)
 }
 
 // Client Client

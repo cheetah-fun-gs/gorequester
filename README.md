@@ -20,6 +20,7 @@ import (
 
 func main() {
 	// Get
+	fmt.Println(requester.New("GET", "http://httpbin.org/get?abc=123", "def=456").ReadString())
 	fmt.Println(requester.New("GET", "http://httpbin.org/get?abc=123").ReadString())
 	fmt.Println(requester.New("GET", "http://httpbin.org/get?abc=123").AddRawQuery("def=456").ReadString())
 
@@ -27,6 +28,7 @@ func main() {
 		"qewr": "424",
 		"uio":  1231,
 	}
+	fmt.Println(requester.Get("http://httpbin.org/get?abc=123", m).ReadString())
 	fmt.Println(requester.Get("http://httpbin.org/get?abc=123").AddRawQuery(m).ReadString())
 
 	s := struct {
@@ -36,7 +38,10 @@ func main() {
 		FDI: "9f0d",
 		IFU: 413,
 	}
+	fmt.Println(requester.Get("http://httpbin.org/get?abc=123", s).ReadString())
 	fmt.Println(requester.Get("http://httpbin.org/get?abc=123").AddRawQuery(s).ReadString())
+
+	fmt.Println(requester.Get("http://httpbin.org/get?abc=123", m, s).ReadString())
 
 	// Post Raw
 	fmt.Println(requester.New("POST", "http://httpbin.org/post?abc=123").SetRawData(m).ReadString())
@@ -51,6 +56,7 @@ func main() {
 		"fdf":  424,
 		"gege": []int{3213, 4213},
 	}
+	fmt.Println(requester.PostForm("http://httpbin.org/post?abc=123", m2).ReadString())
 	fmt.Println(requester.Post("http://httpbin.org/post?abc=123").SetFormFields(m2).ReadString())
 
 	s2 := struct {
@@ -64,8 +70,9 @@ func main() {
 		IFI: []int{12, 421},
 		GUE: []string{"fs", "dsf"},
 	}
+	fmt.Println(requester.Post("http://httpbin.org/post?abc=123", s2).ReadString())
 	fmt.Println(requester.Post("http://httpbin.org/post?abc=123").SetFormFields(s2).ReadString())
-
+	
 	// Post File
 	// f := &requester.FormFile{
 	// 	FieldName: "file",
