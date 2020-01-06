@@ -68,6 +68,31 @@ func NewWithClient(method, toURL string, client *http.Client) *Requester {
 	}
 }
 
+// Client Client
+func (req *Requester) Client() *http.Client {
+	return req.client
+}
+
+// URL URL
+func (req *Requester) URL() *url.URL {
+	return req.url
+}
+
+// Request Request
+func (req *Requester) Request() *http.Request {
+	return req.request
+}
+
+// RawData RawData
+func (req *Requester) RawData() []byte {
+	return req.rawData
+}
+
+// FormFields FormFields
+func (req *Requester) FormFields() url.Values {
+	return req.formFields
+}
+
 // Get 创建一个 GET Requester
 func Get(toURL string, v ...interface{}) *Requester {
 	return New("GET", toURL).AddRawQuery(v...)
@@ -95,21 +120,6 @@ func PostJSON(toURL string, v interface{}) *Requester {
 // PostForm PostForm
 func PostForm(toURL string, v interface{}) *Requester {
 	return New("POST", toURL).SetFormFields(v)
-}
-
-// Client Client
-func (req *Requester) Client() *http.Client {
-	return req.client
-}
-
-// URL URL
-func (req *Requester) URL() *url.URL {
-	return req.url
-}
-
-// Request Request
-func (req *Requester) Request() *http.Request {
-	return req.request
 }
 
 // v type in ( string, struct, map[string]string, map[string][]string,  map[string]int, map[string][]int )
