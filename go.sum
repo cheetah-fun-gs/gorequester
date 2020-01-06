@@ -10,6 +10,10 @@ github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+Ce
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/cheetah-fun-gs/goplus v0.0.40 h1:BQu7ftQfuhIr4uzsM7y2mDqrr3g7f81qWsAC3HZx+dg=
 github.com/cheetah-fun-gs/goplus v0.0.40/go.mod h1:dyUOnkPNdRb2qbtDrN2JvlfYTYN7Vwbif6VN8oQ6Svo=
+github.com/cheetah-fun-gs/goplus v0.0.41 h1:P2ZTOJapbpZ/566R7CTsZ4FFLMJit27HhzmTTVNPo9I=
+github.com/cheetah-fun-gs/goplus v0.0.41/go.mod h1:dyUOnkPNdRb2qbtDrN2JvlfYTYN7Vwbif6VN8oQ6Svo=
+github.com/cheetah-fun-gs/goplus v0.0.42 h1:7/ktPWejhvR6gTRtBVoYgZem6QJvYWlrXaw7su0g+dM=
+github.com/cheetah-fun-gs/goplus v0.0.42/go.mod h1:dyUOnkPNdRb2qbtDrN2JvlfYTYN7Vwbif6VN8oQ6Svo=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.10+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
