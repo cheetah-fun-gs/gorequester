@@ -1,13 +1,3 @@
-# gorequester
-Golang chain style http request lib
-
-# Install
-```bash
-go get github.com/cheetah-fun-gs/gorequester
-```
-
-# How
-```golang
 package main
 
 import (
@@ -20,7 +10,6 @@ import (
 
 func main() {
 	// Get
-	fmt.Println(requester.New("GET", "http://httpbin.org/get?abc=123", "def=456").ReadString())
 	fmt.Println(requester.New("GET", "http://httpbin.org/get?abc=123").ReadString())
 	fmt.Println(requester.New("GET", "http://httpbin.org/get?abc=123").AddRawQuery("def=456").ReadString())
 
@@ -70,9 +59,8 @@ func main() {
 		IFI: []int{12, 421},
 		GUE: []string{"fs", "dsf"},
 	}
-	fmt.Println(requester.Post("http://httpbin.org/post?abc=123", s2).ReadString())
 	fmt.Println(requester.Post("http://httpbin.org/post?abc=123").SetFormFields(s2).ReadString())
-	
+
 	// Post File
 	// f := &requester.FormFile{
 	// 	FieldName: "file",
@@ -95,4 +83,3 @@ func main() {
 	}
 	fmt.Println(requester.NewWithClient("GET", "http://httpbin.org/get?abc=123", c).ReadString())
 }
-```
