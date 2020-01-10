@@ -1,5 +1,5 @@
 # gorequester
-Golang chain style http request lib
+Easy to use Golang chain style http request lib.
 
 # Install
 ```bash
